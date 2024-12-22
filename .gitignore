@@ -1,0 +1,4 @@
+venv/
+.env
+_pg_data
+.DS_Store

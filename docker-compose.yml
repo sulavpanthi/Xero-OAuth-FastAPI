@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend
+    # network_mode: host
+    networks:
+      - xero_network
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - database
+
+  database:
+    image: postgres:15-alpine
+    container_name: database
+    # network_mode: host
+    networks:
+      - xero_network
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./_pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: xero
+      TZ: Asia/Kathmandu
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "xero"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+
+networks:
+  xero_network:
+    driver: bridge
+
+
+
