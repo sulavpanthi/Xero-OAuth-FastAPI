@@ -79,7 +79,7 @@ def check_tenants_list(
 
     # Step 6. Generate new token from xero, if previous token is expired
     if user_token.expires_at < datetime.utcnow():
-        print("Previous token for this user has already been expired------------")
+        log.info("Previous token for this user has already been expired------------")
         token_data = {
             "grant_type": "refresh_token",
             "refresh_token": user_token.refresh_token,
@@ -99,7 +99,7 @@ def check_tenants_list(
             access_token = tokens["access_token"]
 
     else:
-        print("Using the same previous token-----------")
+        log.info("Using the same previous token-----------")
         access_token = user_token.access_token
 
     # Step 7. Use new access token to fetch from xero api
@@ -112,7 +112,7 @@ def check_tenants_list(
             },
         )
         tenants = response.json()
-    print("Tenants from xero", tenants)
+    log.info("Tenants from xero", tenants)
 
     for tenant in tenants:
         json_dict = tenant
@@ -130,7 +130,7 @@ def fetch_invoices(
     )
 
     if user_token.expires_at < datetime.utcnow():
-        print("Previous token for this user has already been expired------------")
+        log.info("Previous token for this user has already been expired------------")
         token_data = {
             "grant_type": "refresh_token",
             "refresh_token": user_token.refresh_token,
@@ -150,7 +150,7 @@ def fetch_invoices(
             access_token = tokens["access_token"]
 
     else:
-        print("Using the same previous token-----------")
+        log.info("Using the same previous token-----------")
         access_token = user_token.access_token
 
     with httpx.Client() as client:
@@ -163,7 +163,7 @@ def fetch_invoices(
             },
         )
         invoices = response.json()
-    print("Invoices from xero------", invoices)
+    log.info("Invoices from xero------", invoices)
 
 
 @app.get("/me", response_model=UserOAuthTokenBaseSchema)

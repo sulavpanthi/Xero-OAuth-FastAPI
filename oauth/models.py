@@ -29,7 +29,6 @@ class UserOAuthToken(Base):
     @classmethod
     def save_tokens(cls, user_id, tokens):
         expires_in = tokens["expires_in"]
-        print("tokens-----", tokens)
         expires_at = datetime.utcnow() + timedelta(seconds=expires_in)
 
         with get_db_context() as session:
