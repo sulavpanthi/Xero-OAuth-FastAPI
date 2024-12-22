@@ -112,11 +112,8 @@ def fetch_tenants_list(
             },
         )
         tenants = response.json()
-    log.info("Tenants from xero", tenants)
 
-    for tenant in tenants:
-        json_dict = tenant
-    return json_dict["tenantId"]
+    return tenants
 
 
 @app.post("/invoices")
@@ -159,11 +156,12 @@ def fetch_invoices(
             headers={
                 "Authorization": "Bearer " + access_token,
                 "Xero-tenant-id": tenant_id,
-                "Content-Type": "application/json",
+                "Accept": "application/json",
             },
         )
+        log.info("Response after fetching invoices from xero------", response.text)
         invoices = response.json()
-    log.info("Invoices from xero------", invoices)
+    return invoices
 
 
 @app.get("/me", response_model=UserOAuthTokenBaseSchema)
@@ -191,4 +189,3 @@ def refresh_token(
     if not user:
         raise HTTPException(detail="User not found", status_code=400)
     return {"access_token": create_jwt_token({"uid": str(user.id)})}
-
