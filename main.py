@@ -22,8 +22,8 @@ app = FastAPI()
 
 # OAuth Flow
 # Step 1. Initiate login
-@app.get("/login-with-xero")
-def login():
+@app.get("/login")
+def login_with_xero():
     user_id = UserOAuthToken.create()
     auth_url = f"{config.authorization_url}?response_type=code&client_id={config.client_id}&redirect_uri={config.redirect_url}&scope={config.scopes}&state={user_id}"
     return RedirectResponse(auth_url)
@@ -31,7 +31,7 @@ def login():
 
 # Step 2. Get callback from xero, after user provides consent
 @app.get("/callback")
-def callback(code: str, state: str):
+def callback_from_xero(code: str, state: str):
     headers = {
         "Authorization": "Basic "
         + base64.b64encode(
@@ -70,7 +70,7 @@ def callback(code: str, state: str):
 
 # Step 5. Check full list of tenants that we can access
 @app.get("/check-tenants")
-def check_tenants_list(
+def fetch_tenants_list(
     user_id: UUID = Depends(get_user_id), session: Session = Depends(get_db_session)
 ):
     user_token = (
@@ -192,29 +192,3 @@ def refresh_token(
         raise HTTPException(detail="User not found", status_code=400)
     return {"access_token": create_jwt_token({"uid": str(user.id)})}
 
-
-# @app.get("/refresh")
-# def refresh_token():
-#     with get_db_context() as session:
-#         token = session.query(UserOAuthToken).first()
-#         if not token:
-#             raise HTTPException(status_code=404, detail="No token found")
-
-#     if datetime.utcnow() < token.expires_at:
-#         return {"message": "Token still valid", "access_token": token.access_token}
-
-#     token_data = {
-#         "grant_type": "refresh_token",
-#         "refresh_token": token.refresh_token,
-#         "client_id": config.client_id,
-#         "client_secret": config.client_secret
-#     }
-
-#     with httpx.Client() as client:
-#         response = client.post(config.token_url, data=token_data)
-#         if response.status_code != 200:
-#             raise HTTPException(status_code=response.status_code, detail="Token refresh failed")
-
-#         tokens = response.json()
-#         UserOAuthToken.save_tokens(tokens)
-#         return {"message": "Token refreshed", "access_token": tokens["access_token"]}

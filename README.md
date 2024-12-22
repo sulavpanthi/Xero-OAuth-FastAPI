@@ -14,8 +14,7 @@ This project demonstrates the implementation of an OAuth 2.0 authentication flow
 ## Table of Contents
 
 - [Features](#features)
-- [Installation](#installation)
-- [Configuration](#configuration)
+- [Project Setup](#project-setup)
 - [API Endpoints](#api-endpoints)
   - [Login with Xero](#1-login-with-xero)
   - [Callback from Xero](#2-callback-from-xero)
@@ -26,7 +25,7 @@ This project demonstrates the implementation of an OAuth 2.0 authentication flow
 - [Code Explanation](#code-explanation)
 - [License](#license)
 
-## Installation
+## Project Setup
 
 Follow these steps to set up the project locally:
 
@@ -78,7 +77,7 @@ This will start the application at [http://127.0.0.1:8000](http://127.0.0.1:8000
 
 ### 1. Login with Xero
 
-- **Endpoint**: `/login-with-xero`
+- **Endpoint**: `/login`
 - **Method**: GET
 - **Description**: Initiates the login process by redirecting the user to Xero’s authorization page where they can consent to the required permissions.
 - **Response**: Redirects the user to Xero’s OAuth authorization URL.
